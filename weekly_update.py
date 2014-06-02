@@ -20,8 +20,13 @@ main_window.wm_title("Weekly Update Maker")
 
 # define functions for text parsing
 def add_update():
-	output_text.insert(INSERT, "<div style='background-color: #e9e9e9; padding: 10px; color: #777';>\n\n")
-
+	if collie_cup.get() == 1:
+		output_text.insert(INSERT, "<div style='background-color: #3D9599; padding: 10px; color: #fff;'>\n\n")
+		output_text.insert(INSERT, "<h1 style='font-weight: normal;'>This week's Collie Cup goes to<h1>\n\n")
+		output_text.insert(INSERT, "<img src='http://www.psdgraphics.com/file/gold-trophy-cup.jpg' alt='trophy' style='width: 100%;' />\n\n")
+	else:
+		output_text.insert(INSERT, "<div style='background-color: #e9e9e9; padding: 10px; color: #777;'>\n\n")
+		
 	output_text.insert(INSERT, "<h1>"+staff_entry.get()+"</h1>\n")
 	output_text.insert(INSERT, "<h2>Last Week</h2>\n")
 	output_text.insert(INSERT, "<ul>\n")
@@ -44,15 +49,22 @@ def add_update():
 
 
 def add_text():
-	output_text.insert(INSERT, "<div style='background-color: #35b528; padding: 10px; color: #fff';>\n")
+	output_text.tag_add("text", INSERT)
+	output_text.tag_config("text", background="medium spring green", foreground="black")
+	output_text.insert(INSERT, "<div style='background-color: #009F4C; padding: 10px; color: #fff; text-align: center;'>\n")
 	output_text.insert(INSERT, "<p>"+add_text_entry.get()+"</p>\n")
 	output_text.insert(INSERT, "</div>\n\n")
 
 
+
 def add_image():
-	output_text.insert(INSERT, "<div style='background-color: #35b528; padding: 10px; color: #fff';>\n")
+	output_text.tag_add("image", "linestart", "lineend")
+	output_text.insert(INSERT, "<div style='background-color: #009F4C; padding: 10px; color: #fff;'>\n")
 	output_text.insert(INSERT, "\t<img src='"+add_image_entry.get()+"' style='width: 100%;' />\n")
 	output_text.insert(INSERT, "</div>\n\n")
+	output_text.tag_config("image", background="medium spring green", foreground="black")
+
+
 
 
 # NAME frame
@@ -87,6 +99,30 @@ this_week_text = Text(this_week_frame, height=10, wrap=WORD)
 this_week_text.insert(INSERT, "")
 this_week_text.grid(row=2, column=1)
 
+# ADD frame
+add_frame = Frame(main_window)
+add_frame.grid(row=4, column=1, sticky=E)
+
+collie_cup = IntVar()
+collie_cup_checkbox = Checkbutton(add_frame, text="Collie Cup", variable=collie_cup)
+collie_cup_checkbox.grid(row=1, column=1)
+
+add_update_btn = Button(add_frame, text='Add Update to HTML', width=20, command=add_update)
+add_update_btn.grid(row=1, column=2)
+
+add_text_entry = Entry(add_frame)
+add_text_entry.grid(row=2, column=1)
+
+add_text_btn = Button(add_frame, text='Add Text to HTML', width=20, command=add_text)
+add_text_btn.grid(row=2, column=2, sticky=E)
+
+add_image_entry = Entry(add_frame)
+add_image_entry.grid(row=3, column=1)
+
+add_image_btn = Button(add_frame, text='Add Image to HTML', width=20, command=add_image)
+add_image_btn.grid(row=3, column=2, sticky=E)
+
+
 # OUTPUT frame
 output_text_frame = Frame(main_window)
 output_text_frame.grid(row=1, column=2, rowspan=4)
@@ -97,8 +133,8 @@ output_text_label.grid(row=1, column=1, sticky=W)
 output_text = Text(output_text_frame)
 output_text.insert(END,"""
 <meta charset="utf-8" />
-<div style="max-width: 600px; margin: 0 auto; background-color: #efefef; border-radius: 10px; font-family: sans serif; box-shadow: 1px 1px 10px #777; -webkit-box-shadow: 1px 1px 10px #777; -moz-box-shadow: 1px 1px 10px #777;">
-<div style="background-color: #35b528; font-size: 3em; color: #fff; padding: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; text-align: center;">
+<div style="max-width: 600px; margin: 0 auto; background-color: #efefef; font-family: sans serif;">
+<div style="background-color: #009F4C; font-size: 3em; color: #fff; padding: 10px;">
 <br>
 Weekly Staff Update!
 <br>
@@ -107,7 +143,7 @@ Weekly Staff Update!
 
 
 
-<div style="background-color: #35b528; color: #fff; padding: 10px; text-align: center; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; ">
+<div style="background-color: #009F4C; color: #fff; padding: 10px; text-align: center;">
 <i>Enjoy the week!</i>
 </div>
 </div>
@@ -115,23 +151,12 @@ Weekly Staff Update!
 """)
 output_text.grid(row=2, column=1)
 
-# ADD frame
-add_frame = Frame(main_window)
-add_frame.grid(row=4, column=1, sticky=E)
-
-add_update_btn = Button(add_frame, text='Add Update to HTML', command=add_update)
-add_update_btn.grid(row=1, column=2)
-
-add_text_entry = Entry(add_frame)
-add_text_entry.grid(row=2, column=1)
-
-add_text_btn = Button(add_frame, text='Add Text to HTML', command=add_text)
-add_text_btn.grid(row=2, column=2, sticky=E)
-
-add_image_entry = Entry(add_frame)
-add_image_entry.grid(row=3, column=1)
-
-add_image_btn = Button(add_frame, text='Add Image to HTML', command=add_image)
-add_image_btn.grid(row=3, column=2, sticky=E)
+output_text.tag_add("boilerplate", "1.0", "10.0")
+output_text.tag_add("boilerplate", "13.0", END)
+output_text.tag_config("boilerplate", background="dark slate gray", foreground="gray")
 
 main_window.mainloop()
+
+
+
+# http://imgur.com/P68F1gy
